@@ -1,0 +1,159 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: "Tajawal", "Segoe UI", sans-serif;
+}
+
+body {
+  background: linear-gradient(135deg, #1e293b, #0f172a);
+  color: #e2e8f0;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+header h1 {
+  font-size: 1.8rem;
+  color: #38bdf8;
+  margin-bottom: 8px;
+}
+
+header p {
+  color: #94a3b8;
+}
+
+main {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+  main { grid-template-columns: 1fr; }
+}
+
+.camera-section,
+.report-section {
+  background: #1e293b;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+#video {
+  width: 100%;
+  border-radius: 12px;
+  background: #000;
+  aspect-ratio: 4/3;
+  object-fit: cover;
+}
+
+.controls {
+  display: flex;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+button {
+  flex: 1;
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+  background: #0ea5e9;
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+button:hover:not(:disabled) {
+  background: #0284c7;
+}
+
+button:disabled {
+  background: #475569;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.report-section h2 {
+  margin-bottom: 16px;
+  color: #38bdf8;
+}
+
+.placeholder {
+  color: #64748b;
+  text-align: center;
+  padding: 40px 0;
+}
+
+.metric {
+  background: #0f172a;
+  border-radius: 10px;
+  padding: 14px;
+  margin-bottom: 12px;
+  border-right: 4px solid #38bdf8;
+}
+
+.metric .label {
+  font-size: 0.9rem;
+  color: #94a3b8;
+  margin-bottom: 6px;
+}
+
+.metric .value {
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+
+.badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  margin-top: 6px;
+}
+
+.good { background: #16a34a; color: white; }
+.warn { background: #f59e0b; color: white; }
+.bad  { background: #dc2626; color: white; }
+
+.tips {
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid #334155;
+}
+
+.tips h3 {
+  color: #38bdf8;
+  margin-bottom: 10px;
+}
+
+.tips ul { list-style: none; }
+.tips li {
+  padding: 6px 0;
+  color: #cbd5e1;
+}
+
+.product {
+  background: #0f172a;
+  padding: 10px;
+  border-radius: 8px;
+  margin-top: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9rem;
+}
+
+.product span:last-child {
+  color: #22c55e;
+  font-weight: bold;
+}
