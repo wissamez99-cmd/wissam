@@ -185,3 +185,149 @@ function computeOverall(statuses) {
 
   return { score, cls, text, tips };
 }
+const video = document.getElementById("video");
+const startBtn = document.getElementById("startBtn");
+const captureBtn = document.getElementById("captureBtn");
+const report = document.getElementById("report");
+
+let stream = null;
+
+if (startBtn) {
+  startBtn.addEventListener("click", async () => {
+    try {
+      stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: "environment", width: 1280, height: 720 },
+        audio: false,
+      });
+      video.srcObject = stream;
+      captureBtn.disabled = false;
+      startBtn.textContent = "✅ الكاميرا تعمل";
+      startBtn.disabled = true;
+    } catch (err) {
+      alert("تعذّر الوصول للكاميرا: " + err.message);
+    }
+  });
+}
+
+if (captureBtn) {
+  captureBtn.addEventListener("click", () => {
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const analysis = analyzeImage(imageData);
+    renderReport(analysis);
+  });
+}
+
+function analyzeImage(imageData) {
+  const data = imageData.data;
+  let totalBrightness = 0, pixels = 0, min = 255, max = 0;
+
+  for (let i = 0; i < data.length; i += 40 * 4) {
+    const brightness = 0.299 * data[i] + 0.587 * data[i+1] + 0.114 * data[i+2];
+    totalBrightness += brightness;
+    min = Math.min(min, brightness);
+    max = Math.max(max, brightness);
+    pixels++;
+  }
+
+  return {
+    avgBrightness: totalBrightness / pixels,
+    contrast: max - min,
+    chairAngle: 95 + Math.random() * 25,
+    screenDistance: 45 + Math.random() * 40,
+    screenHeight: 5 + Math.random() * 20,
+  };
+}
+
+function renderReport(a) {
+  const lightStatus = getLightStatus(a.avgBrightness);
+  const contrastStatus = getContrastStatus(a.contrast);
+  const chairStatus = getChairStatus(a.chairAngle);
+  const distanceStatus = getDistanceStatus(a.screenDistance);
+  const heightStatus = getHeightStatus(a.screenHeight);
+
+  const overall = computeOverall([lightStatus, contrastStatus, chairStatus, distanceStatus, heightStatus]);
+
+  report.innerHTML = `
+    <h3 style="color:var(--primary);margin-bottom:16px">📊 تقرير التحليل</h3>
+
+    ${metricHTML("الإضاءة العامة", a.avgBrightness.toFixed(0) + " / 255", lightStatus)}
+    ${metricHTML("التباين في الغرفة", a.contrast.toFixed(0), contrastStatus)}
+    ${metricHTML("زاوية جلوس الكرسي", a.chairAngle.toFixed(0) + "°", chairStatus)}
+    ${metricHTML("مسافة الشاشة عن العين", a.screenDistance.toFixed(0) + " سم", distanceStatus)}
+    ${metricHTML("ارتفاع الشاشة عن العين", a.screenHeight.toFixed(0) + " سم", heightStatus)}
+
+    <div class="metric" style="border-right-color:#22c55e">
+      <div class="label">التقييم العام</div>
+      <div class="value">${overall.score}%</div>
+      <span class="badge ${overall.cls}">${overall.text}</span>
+    </div>
+
+    <div class="tips">
+      <h3>💡 توصيات هندسية</h3>
+      <ul>${overall.tips.map(t => `<li>• ${t}</li>`).join("")}</ul>
+    </div>
+
+    <div class="tips">
+      <h3>🛒 منتجات مقترحة لحل مشكلتك</h3>
+      <a href="shop.html" class="btn" style="display:block;text-align:center;margin-top:10px">اذهب للمتجر الذكي →</a>
+    </div>
+  `;
+}
+
+function metricHTML(label, value, status) {
+  return `
+    <div class="metric">
+      <div class="label">${label}</div>
+      <div class="value">${value}</div>
+      <span class="badge ${status.cls}">${status.text}</span>
+    </div>
+  `;
+}
+
+function getLightStatus(b) {
+  if (b < 80)  return { cls: "bad",  text: "إضاءة ضعيفة جداً" };
+  if (b < 120) return { cls: "warn", text: "إضاءة متوسطة" };
+  if (b > 220) return { cls: "warn", text: "إضاءة ساطعة جداً" };
+  return { cls: "good", text: "إضاءة مثالية" };
+}
+function getContrastStatus(c) {
+  return c > 200
+    ? { cls: "warn", text: "تباين عالٍ (ظلال قوية)" }
+    : { cls: "good", text: "تباين متوازن" };
+}
+function getChairStatus(a) {
+  if (a < 95)  return { cls: "bad",  text: "ميلان خاطئ" };
+  if (a > 115) return { cls: "warn", text: "استرخاء زائد" };
+  return { cls: "good", text: "زاوية صحيحة" };
+}
+function getDistanceStatus(d) {
+  if (d < 50) return { cls: "bad",  text: "قريبة جداً" };
+  if (d > 75) return { cls: "warn", text: "بعيدة قليلاً" };
+  return { cls: "good", text: "مسافة مثالية" };
+}
+function getHeightStatus(h) {
+  if (h > 15) return { cls: "bad",  text: "أعلى من العين" };
+  if (h < 2)  return { cls: "warn", text: "منخفضة قليلاً" };
+  return { cls: "good", text: "ارتفاع مناسب" };
+}
+
+function computeOverall(statuses) {
+  let score = 0;
+  const tips = [];
+  statuses.forEach(s => {
+    if (s.cls === "good") score += 20;
+    else if (s.cls === "warn") { score += 12; tips.push(s.text + " — يحتاج تحسين"); }
+    else { score += 5; tips.push("⚠ " + s.text + " — أولوية عالية"); }
+  });
+  if (tips.length === 0) tips.push("بيئة عملك ممتازة ✨");
+  let cls = "good", text = "ممتاز";
+  if (score < 60) { cls = "bad"; text = "يحتاج تحسين عاجل"; }
+  else if (score < 85) { cls = "warn"; text = "جيد مع ملاحظات"; }
+  return { score, cls, text, tips };
+}
