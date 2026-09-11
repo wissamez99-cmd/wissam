@@ -3,30 +3,76 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>مُصمم مساحات العمل المنزلية</title>
+  <title>مُصمم مساحات العمل المنزلية | الرئيسية</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <header>
-    <h1>🪑 مُصمم ومُخطط مساحات العمل المنزلية</h1>
-    <p>حلّل مكتبك واحصل على تقرير هندسي فوري</p>
-  </header>
+  <nav>
+    <div class="nav-container">
+      <a href="index.html" class="logo">🪑 Ergo<span>Tailor</span></a>
+      <ul class="nav-links">
+        <li><a href="index.html" class="active">الرئيسية</a></li>
+        <li><a href="shop.html">المتجر</a></li>
+        <li><a href="guide.html">دليل التمارين</a></li>
+        <li><a href="testimonials.html">آراء العملاء</a></li>
+        <li><a href="business.html">للشركات</a></li>
+      </ul>
+    </div>
+  </nav>
 
-  <main>
-    <section class="camera-section">
-      <video id="video" autoplay playsinline></video>
-      <div class="controls">
-        <button id="startBtn">🎥 تشغيل الكاميرا</button>
-        <button id="captureBtn" disabled>📸 تحليل المساحة</button>
+  <section class="hero">
+    <h1>حوّل مكتبك المنزلي إلى مساحة صحية</h1>
+    <p>حلّل بيئة عملك بالكاميرا واحصل على تقرير هندسي فوري يحمي ظهرك وعينيك</p>
+  </section>
+
+  <div class="container">
+    <div class="camera-layout">
+      <div class="panel">
+        <video id="video" autoplay playsinline></video>
+        <div class="controls">
+          <button id="startBtn">🎥 تشغيل الكاميرا</button>
+          <button id="captureBtn" disabled>📸 تحليل المساحة</button>
+        </div>
+        <div class="info-box" style="margin-top:14px;font-size:0.9rem">
+          <strong>💡 نصيحة:</strong> ابتعد مترين عن المكتب، والتقط صورة جانبية تُظهر الكرسي والشاشة والإضاءة للحصول على نتائج دقيقة.
+        </div>
       </div>
-      <canvas id="canvas" hidden></canvas>
-    </section>
 
-    <section class="report-section" id="report">
-      <h2>📊 تقرير التحليل</h2>
-      <div class="placeholder">لم يتم التحليل بعد...</div>
-    </section>
-  </main>
+      <div class="panel" id="report">
+        <h3 style="color:var(--primary);margin-bottom:16px">📊 تقرير التحليل</h3>
+        <div style="color:var(--muted);text-align:center;padding:40px 0">
+          لم يتم التحليل بعد...
+        </div>
+      </div>
+    </div>
+
+    <div class="steps">
+      <div class="step">
+        <div class="num">1</div>
+        <h3>شغّل الكاميرا</h3>
+        <p style="color:var(--muted)">افتح كاميرا هاتفك من المتصفح</p>
+      </div>
+      <div class="step">
+        <div class="num">2</div>
+        <h3>التقط صورتك</h3>
+        <p style="color:var(--muted)">صوّر مكتبك من زاوية جانبية</p>
+      </div>
+      <div class="step">
+        <div class="num">3</div>
+        <h3>استلم التقرير</h3>
+        <p style="color:var(--muted)">تحليل فوري بالذكاء الاصطناعي</p>
+      </div>
+      <div class="step">
+        <div class="num">4</div>
+        <h3>حسّن مساحتك</h3>
+        <p style="color:var(--muted)">توصيات وترشيحات أثاث مناسبة</p>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2025 ErgoTailor — منصة مساحات العمل الذكية</p>
+  </footer>
 
   <script src="script.js"></script>
 </body>
